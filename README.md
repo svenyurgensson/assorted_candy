@@ -1,10 +1,9 @@
-
 ## Assorted Candy (aka: All Sorts Of Staff)
 
 This is a collection of Ruby extensions and utilities I've been carting around from project to project.
 Some are taken from the Facets project (I just don't want to include that whole gem in my codebases).
 Others gathered from blog posts, repositories and snippets found on web.
-This is not king of valid gem though.
+This is not something kind of valid gem though.
 
 ## Usage
 

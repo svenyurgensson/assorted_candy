@@ -3,7 +3,7 @@ unless $LOAD_PATH.include?(path = File.dirname(File.expand_path(__FILE__)))
   $: << path
 end
 
-module ASOS
+module AssortedCandy
 end
 
 

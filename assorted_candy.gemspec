@@ -2,7 +2,6 @@
 Gem::Specification.new do |s|
   s.name        = 'assorted-candy'
   s.version     = '0.0.1'
-  s.platform    = Gem::Platform::RUBY
   s.author      = 'Yury Batenko'
   s.email       = 'jutbat@gmail.com'
   s.summary     = 'All Sorts Of Staff Assorted Candy'
@@ -11,7 +10,7 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files`.split($/)
   s.require_path  = '.'
   s.extra_rdoc_files = [
-    'MIT-LICENSE.txt',
+    'LICENSE.txt',
     'README.md'
   ]
 

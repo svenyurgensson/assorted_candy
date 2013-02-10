@@ -1,6 +1,6 @@
 
 Gem::Specification.new do |s|
-  s.name        = 'assorted-candy'
+  s.name        = 'assorted_candy'
   s.version     = '0.0.1'
   s.author      = 'Yury Batenko'
   s.email       = 'jutbat@gmail.com'

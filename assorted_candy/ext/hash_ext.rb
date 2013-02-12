@@ -9,6 +9,26 @@ class Hash
   def only(*keys)
     self.dup.reject { |k,v| !keys.include? k.to_sym }
   end unless instance_methods.include? 'only'
+
+  # Taken from https://github.com/hopsoft/footing
+  # Recursively forces all String values to the specified encoding.
+  # @param [] encoding The encoding to use.
+  # @yield [value] Yields the value after the encoding has been applied.
+  def force_encoding!(encoding, &block)
+    each do |key, value|
+      case value
+        when String
+          # force encoding then strip all non ascii chars
+          if block_given?
+            self[key] = yield(value.force_encoding(encoding))
+          else
+            self[key] = value.force_encoding(encoding)
+          end
+        when Hash then value.force_encoding!(encoding, &block)
+      end
+    end
+  end
+
 end
 
 

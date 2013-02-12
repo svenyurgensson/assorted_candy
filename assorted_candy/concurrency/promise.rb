@@ -18,7 +18,7 @@
 #
 
 module AssortedCandy
-  module Threads
+  module Concurrency
 
     class Promise < defined?(BasicObject) ? BasicObject : ::Object
       NOT_SET = ::Object.new.freeze
@@ -94,7 +94,7 @@ module Kernel
   #   The return value of the block will be the lazily evaluated value of the promise.
   # @return      [Promise]
   def promise(&block)
-    AssortedCandy::Threads::Promise.new(&block)
+    AssortedCandy::Concurrency::Promise.new(&block)
   end
 end
 

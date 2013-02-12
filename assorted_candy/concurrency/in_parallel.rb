@@ -11,7 +11,7 @@ def Exception.ignoring_exceptions
 end
 
 module AssortedCandy
-  module Threads
+  module Concurrency
 
     module Parallel
 
@@ -37,7 +37,7 @@ module AssortedCandy
   end
 end
 
-Enumerable.send(:include, AssortedCandy::Threads::Parallel)
+Enumerable.send(:include, AssortedCandy::Concurrency::Parallel)
 
 
 =begin

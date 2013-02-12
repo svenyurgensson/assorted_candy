@@ -9,8 +9,8 @@ This is not something kind of valid gem though.
 
 The library does not automatically require anything, so you can pick and choose which extensions get added, by requiring them individually, e.g.:
 
-    require 'null_object/null_object'
-    require 'core/multi_block'
+    require 'assorted_candy/null_object/null_object'
+    require assorted_candy/core/multi_block'
 
 and so on.
 

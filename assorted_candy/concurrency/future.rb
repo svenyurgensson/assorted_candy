@@ -11,7 +11,8 @@ require './promise'
 #   y = x * 2     # => 6.  blocks unless 5 seconds has passed.
 #
 module AssortedCandy
-  module Threads
+  module Concurrency
+
     class Future < defined?(BasicObject) ? BasicObject : Object
       instance_methods.each { |m| undef_method m unless m =~ /^(__.*|object_id)$/ }
 
@@ -21,7 +22,7 @@ module AssortedCandy
       # @yield  [] The block to evaluate optimistically.
       # @see    Kernel#future
       def initialize(&block)
-        @promise = ::AssortedCandy::Threads::Promise.new(&block)
+        @promise = ::AssortedCandy::Concurrency::Promise.new(&block)
         @thread  = ::Thread.new { @promise.__force__ }
       end
 
@@ -68,7 +69,7 @@ module Kernel
   #   The return value of the block will be the evaluated value of the future.
   # @return      [Future]
   def future(&block)
-    AssortedCandy::Threads::Future.new(&block)
+    AssortedCandy::Concurrency::Future.new(&block)
   end
 end
 

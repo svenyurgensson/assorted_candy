@@ -9,7 +9,7 @@ end
 
 ## Uncomment requires you need
 
-# require 'assorted_candy/businnes/rbank'
+# require 'assorted_candy/businnes/rcodes'
 
 # require 'assorted_candy/null/null_object'
 # require 'assorted_candy/null/unevaluated'

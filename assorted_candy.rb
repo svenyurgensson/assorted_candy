@@ -11,6 +11,8 @@ end
 
 # require 'assorted_candy/businnes/rcodes'
 
+# require 'assorted_candy/aop/hook'
+
 # require 'assorted_candy/null/null_object'
 # require 'assorted_candy/null/unevaluated'
 
@@ -29,11 +31,13 @@ end
 # require 'assorted_candy/core/retryable'
 # require 'assorted_candy/core/pretty_exception'
 
-# require 'assorted_candy/ext/to_ostruct'
-# require 'assorted_candy/ext/hash_ext'
-# require 'assorted_candy/ext/to_hash_by'
 # require 'assorted_candy/ext/binarize_ostruct'
+# require 'assorted_candy/ext/enum_ext'
+# require 'assorted_candy/ext/hash_ext'
+# require 'assorted_candy/ext/mnemo'
 # require 'assorted_candy/ext/nested_ostruct'
 # require 'assorted_candy/ext/sort_in_order'
+# require 'assorted_candy/ext/to_hash_by'
+# require 'assorted_candy/ext/to_ostruct'
 
 # require 'assorted_candy/rails/decorative'

@@ -1,0 +1,107 @@
+
+# HookMeUp
+
+This gem lets you create hook methods for any method of any class.
+You can create a `:before` and `:after` hooks for any method you like.
+
+## Usage
+
+1. Include HookMeUp in your class
+2. call `hook` with a method name or array of methods and specify `:before` hook, `:after` hook or both.
+
+NOTE: `hook` call **must** come after your method definitions
+
+```ruby
+class SomeClass
+  include AssortedCandy::Aop::Hook
+
+    def some_method
+    end
+
+    def some_other_method
+    end
+
+    def before_hook
+    end
+
+    def after_hook
+    end
+
+    hook [:some_method, :some_other_method], :before => :before_hook, :after => :after_hook
+end
+```
+
+### Disabling hooks for a specific call
+You can disable a hooks on specific calls with the following options:
+
+* :no_hook
+* :no_before_hook
+* :no_after_hook
+
+```ruby
+some_method(args, no_hook: true) # No hooks will be called
+some_method(args, no_before_hook: true) # The before hook will be skipped
+some_method(args, no_after_hook: true)  # The After hook will be skipped
+```
+
+### You can pass lambda to the hooks instead of methods
+
+    hook :some_method, before: ->(sender, *args){ sender.do_something(args) },
+            after: ->(sender, *args, result){ sender.do_something_else(result) }
+
+## Arguments
+
+### When called with method names
+The `:before` hook is passed with an optional `*args`, which are the arguments passed to the original method:
+
+    def before(*args)
+    end
+
+The `:after` hook is passed with optional two arguments:
+
+    def after(*args, result)
+    end
+
+Where `result` is the result of the original method
+
+### When called with lamdba
+There is an additional, mandatory, argument: **sender**, which is the class instance of the original method:
+
+    hook :some_method, :before => lambda{ |sender, *args| ... },
+                       :after => lambda{ |sender, @args, result| ... }
+
+
+## Examples (Controller)
+The following two examples show how to use `hook` in a controller,
+which actually does the same as `before_filter`; this is just for the sake of demonstration and can be done with models, 'regular' classes and so on...
+
+
+### With lambda
+    class HomeController < ApplicationController
+        include HookMeUp
+
+        def index
+            render :text => "hello there #{params[:name]}"
+        end
+
+        hook :index,
+            :before => lambda{ |controller, *args| controller.params[:name] = controller.current_user.name }
+    end
+
+
+### With method name
+    class HomeController < ApplicationController
+        include AssortedCandy::Aop::Hook
+
+        def index
+            render :text => "hello there #{params[:name]}"
+        end
+
+        hook :index, before: :do_this_before
+
+        private
+
+            def do_this_before
+                params[:name] = current_user.name
+            end
+    end

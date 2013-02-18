@@ -1,6 +1,6 @@
 # Taken from https://github.com/bhuga/promising-future/blob/master/lib/future.rb
 
-require './promise'
+require_relative 'promise'
 
 ##
 # A delayed-execution result, optimistically evaluated in a new thread.

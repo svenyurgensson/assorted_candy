@@ -8,7 +8,7 @@ module AssortedCandy
       # into the including module or class.
       def Methods(source_module, *method_names)
         all_methods = source_module.instance_methods +
-          source_module.private_instance_methods
+                      source_module.private_instance_methods
         unwanted_methods = all_methods - method_names
         import_module = source_module.clone
         import_module.module_eval do

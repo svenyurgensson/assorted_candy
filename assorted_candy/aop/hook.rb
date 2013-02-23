@@ -8,7 +8,7 @@ module AssortedCandy
         def hook(*args)
           hooks = args.last.is_a?(::Hash) ? args.pop : {}
 
-          args.each do |method|
+          args.flatten.each do |method|
             original_method = self.instance_method(method)
 
             self.send(:define_method, method) do |*a|
@@ -74,6 +74,41 @@ if __FILE__ == $0
     line = 'line' + caller()[0][/:\d+:/]
     puts predicat ? "#{line} proved" : "#{line} not proven"
   end
+
+  class SomeClass
+    include AssortedCandy::Aop::Hook
+    attr_reader :result
+    def initialize
+      @result = []
+    end
+
+    def some_method
+      @result << "Hello!"
+    end
+
+    private
+    def before_hook
+      @result << "--> before hook"
+    end
+
+    def after_hook(*)
+      @result << "--> afer hook"
+    end
+
+    hook [:some_method], before: :before_hook, after: :after_hook
+  end
+
+  z = SomeClass.new
+  z.some_method
+  check(z.result == ["--> before hook", "Hello!", "--> afer hook"])
+
+  z = SomeClass.new
+  z.some_method({no_before_hook: true})
+  check(z.result == ["Hello!", "--> afer hook"])
+
+  z = SomeClass.new
+  z.some_method({no_after_hook: true})
+  check(z.result == ["--> before hook", "Hello!"])
 
 
 end

@@ -22,6 +22,8 @@ end
 # require 'assorted_candy/concurrency/promise'
 
 # require 'assorted_candy/core/include'
+# require 'assorted_candy/core/class2proc'
+# require 'assorted_candy/core/array2proc'
 # require 'assorted_candy/core/let'
 # require 'assorted_candy/core/multi_block'
 # require 'assorted_candy/core/named_proc'

@@ -7,13 +7,6 @@ This is not something kind of valid gem though.
 
 ## Usage
 
-The library does not automatically require anything, so you can pick and choose which extensions get added, by requiring them individually, e.g.:
-
-    require 'assorted_candy/null_object/null_object'
-    require 'assorted_candy/core/multi_block'
-
-and so on.
-
 My own approach where to place this library in rails project:
 
     app/
@@ -29,6 +22,19 @@ and require it in my Gemfile as:
 
 As you can see I just clone this repository into project's tree and treat it as ordinary
 library. Don't miss that you should explicitely require particular ruby files.
+
+The library does not automatically require anything, so you can pick and choose which extensions get added, by requiring them individually, e.g.:
+
+    require 'assorted_candy/null_object/null_object'
+    require 'assorted_candy/core/multi_block'
+
+and so on.
+
+Or you can use helper method somewere in your initializing script:
+
+    AssortedCandy[:option, :null_object]
+
+Just feed this method with names of library name.
 
 ## Cautions
 

@@ -1,1 +1,1 @@
-rsync -a --stats --delete ./.git/ github.com:svenyurgensson/assorted_candy.git/
+rsync -a --stats --delete ./.git/ github.com:svenyurgensson/assorted_candy.git/ .

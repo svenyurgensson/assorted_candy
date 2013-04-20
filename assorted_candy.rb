@@ -4,8 +4,17 @@ unless $LOAD_PATH.include?(path = File.dirname(File.expand_path(__FILE__)))
 end
 
 module AssortedCandy
+  @known = Dir[File.join(File.dirname(__FILE__), 'assorted_candy/**/*.rb')]
+  def self.[](*names)
+    names.each do |name|
+      if library = @known.detect{|lib| lib.end_with?(name.to_s+'.rb') }
+        Kernel.require_relative(library)
+      end
+    end
+  end
 end
 
+# Use: AssortedCandy[:hook, :null_object, :option]
 
 ## Uncomment requires you need
 
@@ -13,8 +22,9 @@ end
 
 # require 'assorted_candy/aop/hook'
 
-# require 'assorted_candy/null/null_object'
-# require 'assorted_candy/null/unevaluated'
+# require 'assorted_candy/fpatterns/null_object'
+# require 'assorted_candy/fpatterns/unevaluated'
+# require 'assorted_candy/fpatterns/option'
 
 # require 'assorted_candy/concurrency/in_parallel'
 # require 'assorted_candy/concurrency/simple_future'

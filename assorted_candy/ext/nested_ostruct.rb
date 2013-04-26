@@ -19,6 +19,26 @@ class NestedOpenStruct < OpenStruct
       end
     end
   end
+
+  def as_json
+    marshal_dump.as_json
+  end
+
+  def to_json
+    marshal_dump.to_json
+  end
+
+  def to_h
+    marshal_dump
+  end
+
+  def to_s
+    marshal_dump.to_s
+  end
+
+  def inspect
+    to_s
+  end
 end
 
 if __FILE__ == $0
@@ -31,4 +51,5 @@ if __FILE__ == $0
   z = NestedOpenStruct.new( {a: {b: {c: 1}}} )
   check( z.a.b.c == 1 )
 
+  p z.to_h
 end

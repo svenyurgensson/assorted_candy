@@ -43,12 +43,22 @@ class Hash
     schema.each do |el|
       if Hash === el
         el.each do |k,v|
+          raise ArgumentError.new("Bad schema on key: #{k}, value: #{v}. Value have to be an array") unless Array === v
+          new_hash[k] = []
           next unless self.has_key?(k)
-          new_hash[k] = self[k].to_schema(v)
+          v.each do |vv|
+            if Array === vv
+              new_hash[k] = self[k].map{|sel| sel.to_schema(vv)}
+            else
+              new_hash[k] = self[k].to_schema(v)
+            end
+          end
         end
+      elsif self.has_key?(el)
+        new_hash[el] = self[el]
+      else
+        new_hash[el] = nil
       end
-      next unless self.has_key?(el)
-      new_hash[el] = self[el]
     end
     new_hash
   end unless instance_methods.include? 'to_schema'
@@ -76,19 +86,47 @@ if __FILE__ == $0
 
 
   # Test schema
-  schema = [:aaa, :bbb, :ccc => [:ddd, :ggg]]
+  schema = [
+            :aaa,
+            :bbb,
+            :ooo,
+            {:ccc => [:ddd, :ggg]},
+            {:zzz => [[:hhh, :kkk, :mmm]]},
+           ]
+
   input = {
     :aaa => "22",
     :aaaa => "New 22",
     :bbb => "434",
-    :ccc => {:ddd => "abc", :ddddd => "Not needed", :ggg => "Needed", :hard_to_believe => []}
+    :ccc => {:ddd   => "abc",
+             :ddddd => "Not needed",
+             :ggg   => "Needed",
+             :hard_to_believe => []},
+    :zzz => [
+      {:hhh  => 126,
+       :hhhh => "Don't need",
+       :kkk  => "Existing key"},
+      {:hhh  => "DoobyDo",
+       :kkk  => "Needed",
+       :mmm  => "Existing key"}
+    ]
   }
+
   output = {
     :aaa => "22",
     :bbb => "434",
-    :ccc => {:ddd => "abc", :ggg => "Needed"}
+    :ooo => nil,
+    :ccc => {:ddd => "abc", :ggg => "Needed"},
+    :zzz => [{:hhh => 126, :kkk => "Existing key", :mmm => nil},
+             {:hhh=>"DoobyDo", :kkk=>"Needed", :mmm=>"Existing key"}]
   }
 
-  check( input.to_schema(schema) == output )
+ check( input.to_schema(schema) == output )
+
+  puts
+  puts "schema:\n    #{schema}"
+  puts "input:\n    #{input}"
+  puts "desired_output:\n   #{output}"
+  puts "apply:\n    #{input.to_schema(schema)}"
 
 end

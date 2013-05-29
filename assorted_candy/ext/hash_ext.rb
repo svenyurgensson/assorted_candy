@@ -38,6 +38,20 @@ class Hash
     self
   end unless instance_methods.include? 'sumbolize_keys_deep!'
 
+  def to_schema(schema)
+    new_hash = {}
+    schema.each do |el|
+      if Hash === el
+        el.each do |k,v|
+          next unless self.has_key?(k)
+          new_hash[k] = self[k].to_schema(v)
+        end
+      end
+      next unless self.has_key?(el)
+      new_hash[el] = self[el]
+    end
+    new_hash
+  end unless instance_methods.include? 'to_schema'
 
 end
 
@@ -59,5 +73,22 @@ if __FILE__ == $0
   result = { :a => 'b', :c => { :d => { :e => 'f' }, :g => 'h' }, ['i'] => 'j' }
 
   check( target.symbolize_keys_deep! == result )
+
+
+  # Test schema
+  schema = [:aaa, :bbb, :ccc => [:ddd, :ggg]]
+  input = {
+    :aaa => "22",
+    :aaaa => "New 22",
+    :bbb => "434",
+    :ccc => {:ddd => "abc", :ddddd => "Not needed", :ggg => "Needed", :hard_to_believe => []}
+  }
+  output = {
+    :aaa => "22",
+    :bbb => "434",
+    :ccc => {:ddd => "abc", :ggg => "Needed"}
+  }
+
+  check( input.to_schema(schema) == output )
 
 end

@@ -38,7 +38,8 @@ class Hash
     self
   end unless instance_methods.include? 'sumbolize_keys_deep!'
 
-  def to_schema(schema)
+  def to_schema(schema, strong=true)
+    strong = strong
     new_hash = {}
     schema.each do |el|
       if Hash === el
@@ -48,16 +49,16 @@ class Hash
           next unless self.has_key?(k)
           v.each do |vv|
             if Array === vv
-              new_hash[k] = self[k].map{|sel| sel.to_schema(vv)}
+              new_hash[k] = self[k].map{|sel| sel.to_schema(vv, strong)}
             else
-              new_hash[k] = self[k].to_schema(v)
+              new_hash[k] = self[k].to_schema(v, strong)
             end
           end
         end
       elsif self.has_key?(el)
         new_hash[el] = self[el]
       else
-        new_hash[el] = nil
+        new_hash[el] = nil if strong
       end
     end
     new_hash
@@ -127,6 +128,6 @@ if __FILE__ == $0
   puts "schema:\n    #{schema}"
   puts "input:\n    #{input}"
   puts "desired_output:\n   #{output}"
-  puts "apply:\n    #{input.to_schema(schema)}"
+  puts "apply:\n    #{input.to_schema(schema, false)}"
 
 end

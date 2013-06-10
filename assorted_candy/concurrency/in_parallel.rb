@@ -10,34 +10,28 @@ def Exception.ignoring_exceptions
   end
 end
 
-module AssortedCandy
-  module Concurrency
+module Enumerable
 
-    module Parallel
-
-      def in_parallel
-        map{ |x| Thread.new{ yield(x) } }.each(&:join)
-      end
-
-      def in_parallel_n(n)
-        queue = Queue.new
-        ts = (1..n).map do
-          Thread.new do
-            while x = queue.deq
-              Exception.ignoring_exceptions{ yield(x[0]) }
-            end
-          end
-        end
-        each{ |x| queue << [x] }
-        n.times{ queue << nil }
-        ts.each(&:join)
-      end
-    end # module Parallel
-
+  def in_parallel
+    map{ |x| Thread.new{ yield(x) } }.each(&:join)
   end
+
+  def in_parallel_n(n)
+    queue = Queue.new
+    ts = (1..n).map do
+      Thread.new do
+        while x = queue.deq
+          Exception.ignoring_exceptions{ yield(x[0]) }
+        end
+      end
+    end
+    each{ |x| queue << [x] }
+    n.times{ queue << nil }
+    ts.each(&:join)
+  end
+      
 end
 
-Enumerable.send(:include, AssortedCandy::Concurrency::Parallel)
 
 
 =begin

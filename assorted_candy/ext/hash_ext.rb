@@ -51,10 +51,10 @@ class Hash
           v.each do |vv|
             current_node = self[k] ? self[k].dup : nil
             if Array === vv
-              current_node ||= [ Hash[ vv.map{|c| [c, nil]} ] ]
+              current_node ||= strong ? [ Hash[ vv.map{|c| [c, nil]} ] ] : [{}]
               new_hash[k] = current_node.map{|sel| sel.to_schema(vv, strong)}
             else
-              current_node ||= Hash[v.map{|c| [c, nil]}]
+              current_node ||= strong ? Hash[v.map{|c| [c, nil]}] : {}
               new_hash[k] = current_node.to_schema(v, strong)
             end
           end
@@ -162,7 +162,33 @@ if __FILE__ == $0
   puts "schema:\n    #{schema}"
   puts "input:\n    #{input2}"
   puts "desired_output:\n   #{output2}"
-  puts "apply:\n    #{input2.to_schema(schema, false)}"
+  puts "apply:\n    #{input2.to_schema(schema)}"
   check( input2.to_schema(schema) == output2)
+
+
+
+  input3 = {
+    :aaa => "22",
+    :aaaa => "New 22",
+    :bbb => "434",
+    :ccc => nil,
+    :zzz => nil,
+  }
+  output3 = {
+    :aaa => "22",
+    :bbb => "434",
+    :ccc => {},
+    :zzz => [{}]
+  }
+
+
+  puts "\n--- Third test ----"
+  puts "schema:\n    #{schema}"
+  puts "input:\n    #{input3}"
+  puts "desired_output:\n   #{output3}"
+  puts "apply:\n    #{input3.to_schema(schema, false)}"
+  check( input3.to_schema(schema, false) == output3)
+
+
 
 end

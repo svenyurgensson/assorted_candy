@@ -38,6 +38,7 @@ class Hash
     self
   end unless instance_methods.include? 'sumbolize_keys_deep!'
 
+  # strong forces to resulting hash have key with value nil in case input doesn't have it
   def to_schema(schema, strong=true)
     strong = strong
     new_hash = {}
@@ -48,10 +49,13 @@ class Hash
           new_hash[k] = []
           next unless self.has_key?(k)
           v.each do |vv|
+            current_node = self[k] ? self[k].dup : nil
             if Array === vv
-              new_hash[k] = self[k].map{|sel| sel.to_schema(vv, strong)}
+              current_node ||= [ Hash[ vv.map{|c| [c, nil]} ] ]
+              new_hash[k] = current_node.map{|sel| sel.to_schema(vv, strong)}
             else
-              new_hash[k] = self[k].to_schema(v, strong)
+              current_node ||= Hash[v.map{|c| [c, nil]}]
+              new_hash[k] = current_node.to_schema(v, strong)
             end
           end
         end
@@ -122,12 +126,43 @@ if __FILE__ == $0
              {:hhh=>"DoobyDo", :kkk=>"Needed", :mmm=>"Existing key"}]
   }
 
- check( input.to_schema(schema) == output )
-
-  puts
+  puts "\n--- First test ----"
   puts "schema:\n    #{schema}"
   puts "input:\n    #{input}"
   puts "desired_output:\n   #{output}"
   puts "apply:\n    #{input.to_schema(schema, false)}"
+  check( input.to_schema(schema) == output )
+
+
+  input2 = {
+    :aaa => "22",
+    :aaaa => "New 22",
+    :bbb => "434",
+    :ccc => nil,
+    :zzz => nil,
+    :zzz1 => [
+      {:hhh  => 126,
+       :hhhh => "Don't need",
+       :kkk  => "Existing key"},
+      {:hhh  => "DoobyDo",
+       :kkk  => "Needed",
+       :mmm  => "Existing key"}
+    ]
+  }
+  output2 = {
+    :aaa => "22",
+    :bbb => "434",
+    :ooo => nil,
+    :ccc => {:ddd => nil, :ggg => nil},
+    :zzz => [{:hhh=>nil, :kkk=>nil, :mmm=>nil}]
+  }
+
+
+  puts "\n--- Second test ----"
+  puts "schema:\n    #{schema}"
+  puts "input:\n    #{input2}"
+  puts "desired_output:\n   #{output2}"
+  puts "apply:\n    #{input2.to_schema(schema, false)}"
+  check( input2.to_schema(schema) == output2)
 
 end
